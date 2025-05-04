@@ -1,0 +1,16 @@
+package cholog.controller;
+
+import cholog.exception.DuplicatedException;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+
+@ControllerAdvice
+public class GlobalExceptionHandler {
+
+    @ExceptionHandler(DuplicatedException.class)
+    public ResponseEntity<Void> duplicatedException(DuplicatedException e) {
+        return ResponseEntity.internalServerError().build();
+    }
+
+}

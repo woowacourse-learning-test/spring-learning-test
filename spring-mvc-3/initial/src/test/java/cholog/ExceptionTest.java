@@ -1,12 +1,11 @@
 package cholog;
 
 import io.restassured.RestAssured;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.annotation.DirtiesContext;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
 @DirtiesContext(classMode = DirtiesContext.ClassMode.BEFORE_EACH_TEST_METHOD)
@@ -36,5 +35,15 @@ class ExceptionTest {
                 .then().log().all().extract();
 
         assertThat(responseForMember.statusCode()).isEqualTo(HttpStatus.NOT_FOUND.value());
+    }
+
+    @Test
+    void checkPriorityOfHandlingException() {
+        var responseForReservations = RestAssured
+                .given().log().all()
+                .when().get("/reservations/1")
+                .then().log().all().extract();
+
+        assertThat(responseForReservations.statusCode()).isEqualTo(HttpStatus.INTERNAL_SERVER_ERROR.value());
     }
 }
